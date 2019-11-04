@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: itcast-gateway
+
+---
+server:
+  port: 7000
+spring:
+  profiles: gatewaypeer1
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:7001/eureka/,http://127.0.0.1:7002/eureka/,http://127.0.0.1:7003/eureka/
+
+---
+server:
+  port: 7100
+spring:
+  profiles: gatewaypeer2
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:7001/eureka/,http://127.0.0.1:7002/eureka/,http://127.0.0.1:7003/eureka/
+
+---
+server:
+  port: 7200
+spring:
+  profiles: gatewaypeer3
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:7001/eureka/,http://127.0.0.1:7002/eureka/,http://127.0.0.1:7003/eureka/
+
+

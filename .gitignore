@@ -30,3 +30,5 @@ bin-release/
 !/ch1-1-1-1/ch1-1-1-1-itcast-order/ch1-1-1-1-itcast-order.iml
 /ch1-1-1-1/ch1-1-1-1-itcast-order/ch1-1-1-1-itcast-order.iml
 /ch1-1-1-1/ch1-1-1-1-itcast-order/target/
+/ch1-1-1-2/ch1-1-1-2-itcast-order/target/
+/ch1-1-1-2/ch1-1-1-2-itcast-spring-cloud-gateway/target/

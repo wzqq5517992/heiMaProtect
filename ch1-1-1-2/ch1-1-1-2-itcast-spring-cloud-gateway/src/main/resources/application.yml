@@ -1,0 +1,88 @@
+server:
+  port: 7000
+
+spring:
+  application:
+    name: itcast-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: order_route                    #id标签配置的是router的id，每个router都需要一个唯一的id
+          uri: lb://ITCAST-ORDER             #uri配置的是将请求路由到哪里
+          predicates:
+          - Path=/order/**
+      discovery:
+        locator:
+          enabled: true                      #是否与服务发现组件进行结合，通过 serviceId 转发到具体的服务实例。默认为false，设为true便开启通过服务中心的自动根据 serviceId 创建路由的功能。
+    loadbalancer:
+      retry:
+        enabled: true
+
+  redis:
+    host: 47.93.37.94
+    port: 6379
+#    password: 123456
+    database: 0
+
+eureka:
+  instance:
+    ip-address: ${spring.cloud.client.ip-address}
+    hostname: ${eureka.instance.ip-address}
+    instanceId: ${eureka.instance.ip-address}:${server.port}
+    preferIpAddress: ${eureka.instance.preferIpAddress}
+  client:
+    serviceUrl:
+      defaultZone: ${eureka.client.serviceUrl.defaultZone}
+
+logging:                                                  # 配置输出日志
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE
+        http:
+          server:
+            reactive: DEBUG
+        web:
+          reactive: DEBUG
+    reactor:
+      ipc:
+        netty: DEBUG
+
+#feign配置
+feign:
+  hystrix:
+    enabled: true
+    #sentinel:
+    #enabled: true
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+
+#hystrix配置
+hystrix:
+  threadpool:
+    default:
+      coreSize: 300
+      maxQueueSize: 1000
+      queueSizeRejectionThreshold: 800
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+
+#ribbon配置
+ribbon:
+  #对当前实例的重试次数
+  MaxAutoRetries: 1
+  #切换实例的重试次数
+  MaxAutoRetriesNextServer: 2
+  #请求处理的超时时间
+  ReadTimeout: 60000
+  #请求连接的超时时间
+  ConnectTimeout: 60000
+  #对所有操作请求都进行重试
+  OkToRetryOnAllOperations: true
