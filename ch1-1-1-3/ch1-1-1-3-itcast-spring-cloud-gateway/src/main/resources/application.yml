@@ -1,0 +1,101 @@
+server:
+  port: 7000
+
+spring:
+  application:
+    name: itcast-gateway
+  cloud:
+    gateway:
+      routes:
+        # 订单中心
+        - id: order_route
+          uri: lb://ITCAST-ORDER
+          predicates:
+            - Path=/order/pay/**
+          filters:
+            - name: RequestRateLimiter                  # 限流
+              args:
+                # 使用SpEL表达式从Spring容器中获取Bean对象
+                key-resolver: '#{@pathKeyResolver}'
+                # 速率：令牌桶每秒填充平均速率，装桶的速率，也就是令牌生成的速率，允许用户每秒执行多少请求，而不会丢弃任何请求。这是令牌桶填充的速率。
+                redis-rate-limiter.replenishRate: 1
+                # 容积：令牌桶的上限，是一秒钟内允许用户执行的最大请求数。这是令牌桶可以容纳的令牌数。将此值设置为零将阻止所有请求。
+                redis-rate-limiter.burstCapacity: 2
+            - name: Hystrix                             # 熔断
+              args:
+                name: fallback
+                fallbackUri: 'forward:/fallback'
+      discovery:
+        locator:
+          enabled: true                                 # 是否与服务发现组件进行结合，通过 serviceId 转发到具体的服务实例。默认为false，设为true便开启通过服务中心的自动根据 serviceId 创建路由的功能。
+    loadbalancer:
+      retry:
+        enabled: true                                   # 设为true开启重试。默认为false。
+
+# redis配置
+  redis:
+    host: 127.0.0.1
+    port: 6379
+#    password: 123456
+    database: 0
+
+# eureka配置
+eureka:
+  instance:
+    ip-address: ${spring.cloud.client.ip-address}
+    hostname: ${eureka.instance.ip-address}
+    instanceId: ${eureka.instance.ip-address}:${server.port}
+    preferIpAddress: ${eureka.instance.preferIpAddress}
+  client:
+    serviceUrl:
+      defaultZone: ${eureka.client.serviceUrl.defaultZone}
+
+# 日志配置
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: DEBUG
+
+# feign配置
+feign:
+  hystrix:
+    enabled: true
+    #sentinel:
+    #enabled: true
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+
+# hystrix配置
+hystrix:
+  threadpool:
+    default:
+      #配置核心线程池大小和线程池最大大小
+      coreSize: 300
+      #线程池本身队列的大小
+      maxQueueSize: 1000
+      #动态控制线程池队列的上限
+      queueSizeRejectionThreshold: 800
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            #用来设置thread和semaphore两种隔离策略的超时时间
+            timeoutInMilliseconds: 5000
+
+# ribbon配置
+ribbon:
+  #对当前实例的重试次数
+  MaxAutoRetries: 1
+  #切换实例的重试次数
+  MaxAutoRetriesNextServer: 2
+  #请求处理的超时时间
+  ReadTimeout: 60000
+  #请求连接的超时时间
+  ConnectTimeout: 60000
+  #对所有操作请求都进行重试
+  OkToRetryOnAllOperations: true

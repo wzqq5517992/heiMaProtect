@@ -1,0 +1,34 @@
+server:
+  port: 8100
+
+spring:
+  application:
+    name: itcast-order
+
+eureka:
+  instance:
+    ip-address: ${spring.cloud.client.ip-address}
+    hostname: ${eureka.instance.ip-address}
+    instanceId: ${eureka.instance.ip-address}:${server.port}
+    preferIpAddress: ${eureka.instance.preferIpAddress}
+  client:
+    serviceUrl:
+      defaultZone: ${eureka.client.serviceUrl.defaultZone}
+
+logging:
+  level:
+    com.itcast: debug
+
+# 配置全局的超时时间
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+
+# hystrix全局超时时间配置
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000

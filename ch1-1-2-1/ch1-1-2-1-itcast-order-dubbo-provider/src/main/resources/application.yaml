@@ -1,0 +1,23 @@
+spring:
+  application:
+    # Dubbo 应用名称
+    name: order-provider
+  main:
+    # 表示后发现的bean会覆盖之前相同名称的bean，在 Spring Boot 2.1 以及更高的版本增加该设定， 因为 Spring Boot 默认调整了 Bean 定义覆盖行为，由于我们引入dubbo库，为防止和spring boot 中bean名称重复造成冲突，需要手动设置成true，因为spring boot默认为false。
+    allow-bean-definition-overriding: true
+
+# dubbo
+dubbo:
+  application:
+    name: order-service
+  registry:
+    # 挂载到 zookeeper 注册中心
+    address: zookeeper://39.105.163.224:2181
+  protocol:
+    # dubbo 协议
+    name: dubbo
+    # dubbo 协议端口（ -1 表示自增端口，从 20880 开始）
+    port: -1
+  scan:
+    # dubbo 服务扫描基准包
+    base-packages: com.itcast.service

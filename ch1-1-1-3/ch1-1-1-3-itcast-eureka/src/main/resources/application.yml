@@ -1,0 +1,20 @@
+server:
+  port: 7001
+
+spring:
+  application:
+    name: itcast-eureka
+
+eureka:
+  instance:
+    ip-address: ${spring.cloud.client.ip-address}                                     # 该实例的IP地址
+    hostname: ${eureka.instance.ip-address}                                           # 服务注册中心实例的主机名
+    instanceId: ${eureka.instance.ip-address}:${server.port}                          # 该实例注册到服务中心的唯一ID
+    preferIpAddress: ${eureka.instance.preferIpAddress}                               # 该实例，相较于hostname是否优先使用IP
+  client:
+    registerWithEureka: ${eureka.client.registerWithEureka}                           # 实例是否在eureka服务器上注册自己的信息以供其他服务发现，默认为true，集群使用true，单机下使用false
+    fetchRegistry: ${eureka.client.fetchRegistry}                                     # 此客户端是否获取eureka服务器注册表上的注册信息，默认为true，集群使用true，单机下使用false
+    serviceUrl:
+      defaultZone: ${eureka.client.serviceUrl.defaultZone}                            # 与Eureka注册服务中心的通信zone和url地址
+  server:
+    enableSelfPreservation: ${eureka.server.enable-self-preservation}                   # 开发测试环境，设为false，关闭自我保护，以便调试，因为需要频繁启动注册实例。生成环境需要开启自我保护功能，无论什么情况，服务端都会保持一定数量的服务。避免client与server的网络问题，而出现大量的服务被清除。

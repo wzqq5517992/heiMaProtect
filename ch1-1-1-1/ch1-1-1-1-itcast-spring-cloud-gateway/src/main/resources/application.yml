@@ -1,0 +1,51 @@
+server:
+  port: 7000
+
+spring:
+  application:
+    name: itcast-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true                      #为所有服务都进行转发操作，只需要在访问路径上指定要访问的服务即可，通过这种方式就不用为每个服务都去配置转发规则，当新加了服务的时候，不用去配置路由规则和重启网关。
+          lowerCaseServiceId: true           #通过小写的服务名称进行访问
+      routes:
+        - id: order_route                    #id标签配置的是router的id，每个router都需要一个唯一的id
+          uri: lb://itcast-order             #uri以lb://开头（lb代表从注册中心获取服务），后面接的就是需要转发到的服务名称，这个服务名称必须跟eureka中的对应，否则会找不到服务
+          predicates:
+            - Path=/order/pay/**             #断言规则设置
+
+  redis:
+    host: 47.93.37.94
+    port: 6379
+#    password: 123456
+    database: 0
+
+eureka:
+  instance:
+    ip-address: ${spring.cloud.client.ip-address}
+    hostname: ${eureka.instance.ip-address}
+    instanceId: ${eureka.instance.ip-address}:${server.port}
+    preferIpAddress: ${eureka.instance.preferIpAddress}
+  client:
+    serviceUrl:
+      defaultZone: ${eureka.client.serviceUrl.defaultZone}
+
+logging:
+  level:
+    org.springframework.cloud.gateway: debug
+
+# 配置全局的超时时间
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+
+# hystrix全局超时时间配置
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000

@@ -1,0 +1,23 @@
+
+server:
+  port: 7000
+
+spring:
+  application:
+    # Dubbo 应用名称
+    name: order-consumer
+  main:
+    # 在 Spring Boot 2.1 以及更高的版本增加该设定， 因为 Spring Boot 默认调整了 Bean 定义覆盖行为。
+    allow-bean-definition-overriding: true
+
+# dubbo
+dubbo:
+  application:
+    name: order-consumer-app
+  registry:
+    # 挂载到 zookeeper 注册中心
+    address: zookeeper://39.105.163.224:2181
+  cloud:
+    # The subscribed services in consumer side
+    subscribed-services: order-provider
+
