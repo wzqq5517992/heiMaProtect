@@ -1,0 +1,9 @@
+com\itcast\DynamicDatasourceApplication.class
+com\itcast\util\CustomizedConfigurationPropertiesBinder.class
+com\itcast\entity\User.class
+com\itcast\ds\DynamicDataSource.class
+com\itcast\util\DataSourceManager.class
+com\itcast\util\DataSourceRefresher.class
+com\itcast\util\DataSourceTerminationTask.class
+com\itcast\mapper\UserMapper.class
+com\itcast\config\RefreshableDataSourceConfig.class
